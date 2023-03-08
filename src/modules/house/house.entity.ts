@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, Generated } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  Generated,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class House {
@@ -23,4 +30,10 @@ export class House {
 
   @Column()
   name: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

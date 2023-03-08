@@ -15,4 +15,10 @@ export class HouseService {
     const house = this.houseRepository.create(dto);
     return this.houseRepository.save(house);
   }
+
+  getByUbid(ubid: string) {
+    return this.houseRepository.findOne({
+      where: { ubid },
+    });
+  }
 }
