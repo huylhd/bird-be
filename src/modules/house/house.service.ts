@@ -1,15 +1,25 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateHouseRequest } from './dto/create-house.dto';
-import { House } from './house.entity';
-import { UpdateHouseParams } from './house.interface';
+import { HouseHistory } from './entities/house-history.entity';
+import { House } from './entities/house.entity';
+import { UpdateHouseParams, UpdateOccupancyParams } from './house.interface';
 
 @Injectable()
 export class HouseService {
+  private logger = new Logger(HouseService.name);
   constructor(
     @InjectRepository(House)
     private houseRepository: Repository<House>,
+
+    @InjectRepository(HouseHistory)
+    private houseHistoryRepository: Repository<HouseHistory>,
   ) {}
 
   create(dto: CreateHouseRequest): Promise<House> {
@@ -28,6 +38,36 @@ export class HouseService {
     }
     house = { ...house, ...dto };
     return this.houseRepository.save(house);
+  }
+
+  async updateOccupancy({
+    ubid,
+    dto,
+    house,
+  }: UpdateOccupancyParams): Promise<House> {
+    if (!house) {
+      house = await this.getByUbid(ubid);
+    }
+    house = this.houseRepository.create({ ...house, ...dto });
+    const houseHistory = this.houseHistoryRepository.create({ ...dto, ubid });
+    const manager = this.houseRepository.manager;
+    // Update house record and add a new history record using transaction
+    return manager
+      .transaction(async (transactionalEntityManager) => {
+        await transactionalEntityManager.save(houseHistory);
+        await transactionalEntityManager.save(house);
+      })
+      .then(() => house)
+      .catch((err) => {
+        this.logger.error(
+          `updateOccupancy() for house ${JSON.stringify(
+            house,
+          )} transaction failed: ',
+          ${err.message},
+        `,
+        );
+        throw new InternalServerErrorException('Something went wrong');
+      });
   }
 
   getByUbid(ubid: string): Promise<House> {
