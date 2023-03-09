@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 import { HouseModule } from './modules/house/house.module';
 import { LoggingMiddleware } from './middlewares';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskModule } from './modules/task/task.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,7 +26,9 @@ import { LoggingMiddleware } from './middlewares';
       }),
       inject: [ConfigService],
     }),
+    ScheduleModule.forRoot(),
     HouseModule,
+    TaskModule,
   ],
 })
 export class AppModule implements NestModule {

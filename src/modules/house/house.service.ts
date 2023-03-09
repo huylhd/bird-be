@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { CreateHouseRequest } from './dto/create-house.dto';
 import { HouseHistory } from './entities/house-history.entity';
 import { House } from './entities/house.entity';
@@ -82,5 +82,19 @@ export class HouseService {
     return this.houseRepository.findOne({
       where: { ubid },
     });
+  }
+
+  async pruneHouses() {
+    this.logger.debug('pruneHouses()');
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+    const deleteResult = await this.houseRepository.delete({
+      updatedAt: LessThan(oneYearAgo),
+    });
+    this.logger.debug(
+      `pruneHouses() delete result: ${JSON.stringify(deleteResult)}`,
+    );
+    return;
   }
 }

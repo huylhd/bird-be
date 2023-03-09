@@ -23,3 +23,8 @@
 ### Logging
 
 - Add a middleware for logging the request and response of every endpoints
+
+### Prune houses
+
+- For pruning houses we set up a cron job for the task
+- This task doesn't require frequent execution, so we can schedule it to run once a day at 3AM (low traffic)
