@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 import { HouseModule } from './modules/house/house.module';
-import { LoggingMiddleware } from './middlewares/logging.middleware';
+import { LoggingMiddleware } from './middlewares';
 @Module({
   imports: [
     ConfigModule.forRoot({

@@ -8,7 +8,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from 'src/guards';
 import { formatHouse } from 'src/helpers';
 import { CreateHouseRequest } from './dto/create-house.dto';
 import { UpdateHouseRequest } from './dto/update-house.dto';
