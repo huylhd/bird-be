@@ -3,13 +3,14 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { HouseService } from 'src/modules/house/house.service';
 
 export const XUbidHeaderMissingError = new UnauthorizedException(
   'X-UBID header is missing',
 );
-export const XUbidHeaderInvalidError = new UnauthorizedException(
+export const XUbidHeaderInvalidError = new ForbiddenException(
   'X-UBID header is invalid',
 );
 @Injectable()

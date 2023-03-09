@@ -6,11 +6,13 @@ import { HouseModule } from './modules/house/house.module';
 import { LoggingMiddleware } from './middlewares';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskModule } from './modules/task/task.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -21,7 +23,7 @@ import { TaskModule } from './modules/task/task.module';
         username: configService.get<string>('database.username'),
         password: configService.get<string>('database.password'),
         database: configService.get<string>('database.database'),
-        entities: ['dist/**/*.entity.js'],
+        entities: [configService.get<string>('database.entities')],
         synchronize: true,
       }),
       inject: [ConfigService],

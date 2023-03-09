@@ -12,6 +12,8 @@
 ### Authentication
 
 - Implement an auth guard to make sure the `X-UBID` header matches the requested ubid
+- Throw 401 if no `X-UBID` header presents
+- Throw 403 if the header doesn't match the request resource or resource not found
 
 ### Update occupancy
 
@@ -38,3 +40,7 @@
 - Change endpoint from `/api/house` to plural form `/api/houses`
 - Update create logic to create bulk
 - Update unit test for HouseService.createBulk
+
+### E2E Testing
+
+- Using npm package `testcontainers` to start a test database with Docker

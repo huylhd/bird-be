@@ -22,10 +22,10 @@ export class House {
   @Column('integer', { default: 0 })
   eggs: number;
 
-  @Column('numeric')
+  @Column('float')
   longitude: number;
 
-  @Column('numeric')
+  @Column('float')
   latitude: number;
 
   @Column()
