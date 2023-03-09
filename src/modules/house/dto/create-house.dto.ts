@@ -1,6 +1,12 @@
-import { IsString, IsNumber, MaxLength, MinLength } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  MaxLength,
+  MinLength,
+  ValidateNested,
+} from 'class-validator';
 
-export class CreateHouseRequest {
+export class SingleHouseRequest {
   @IsString()
   @MinLength(4)
   @MaxLength(16)
@@ -11,4 +17,9 @@ export class CreateHouseRequest {
 
   @IsNumber()
   latitude: number;
+}
+
+export class CreateHouseRequest {
+  @ValidateNested()
+  houses: SingleHouseRequest[];
 }

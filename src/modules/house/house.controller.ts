@@ -16,13 +16,13 @@ import { UpdateOccupancyRequest } from './dto/update-occupancy.dto';
 import { House } from './entities/house.entity';
 import { HouseService } from './house.service';
 
-@Controller('house')
+@Controller('houses')
 export class HouseController {
   constructor(private houseService: HouseService) {}
 
   @Post()
-  create(@Body() dto: CreateHouseRequest): Promise<House> {
-    return this.houseService.create(dto);
+  create(@Body() dto: CreateHouseRequest): Promise<House[]> {
+    return this.houseService.createBulk(dto);
   }
 
   @Patch(':ubid')

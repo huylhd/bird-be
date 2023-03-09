@@ -22,10 +22,12 @@ export class HouseService {
     private houseHistoryRepository: Repository<HouseHistory>,
   ) {}
 
-  create(dto: CreateHouseRequest): Promise<House> {
-    this.logger.log(`create() with params ${JSON.stringify(dto)}`);
-    const house = this.houseRepository.create(dto);
-    return this.houseRepository.save(house);
+  createBulk(dto: CreateHouseRequest): Promise<House[]> {
+    this.logger.log(`createBulk() with params ${JSON.stringify(dto)}`);
+    const houses = dto.houses.map((singleHouse) =>
+      this.houseRepository.create(singleHouse),
+    );
+    return this.houseRepository.save(houses);
   }
 
   async update({ ubid, dto, house }: UpdateHouseParams): Promise<House> {
@@ -54,6 +56,9 @@ export class HouseService {
     );
     if (!house) {
       house = await this.getByUbid(ubid);
+    }
+    if (!house) {
+      throw new NotFoundException();
     }
     house = this.houseRepository.create({ ...house, ...dto });
     const houseHistory = this.houseHistoryRepository.create({ ...dto, ubid });

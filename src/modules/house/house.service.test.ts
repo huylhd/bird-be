@@ -21,14 +21,18 @@ const houseHistoryRepositoryMock = {
   save: jest.fn(),
 };
 const createHouseRequest = {
-  name: 'Mocked',
-  latitude: 10.762622,
-  longitude: 106.660172,
+  houses: [
+    {
+      name: 'Mocked',
+      latitude: 10.762622,
+      longitude: 106.660172,
+    },
+  ],
 };
 const mockHouse = {
   id: randomUUID(),
   ubid: randomUUID(),
-  ...createHouseRequest,
+  ...createHouseRequest.houses[0],
 };
 
 describe('HouseService', () => {
@@ -56,19 +60,19 @@ describe('HouseService', () => {
     service = module.get<HouseService>(HouseService);
   });
 
-  describe('create()', () => {
+  describe('createBulk()', () => {
     describe('success', () => {
-      it('should return a new house', async () => {
+      it('should return created houses', async () => {
         houseRepositoryMock.create.mockReturnValue(mockHouse);
-        houseRepositoryMock.save.mockResolvedValue(mockHouse);
+        houseRepositoryMock.save.mockResolvedValue([mockHouse]);
 
-        const createdMouse = await service.create(createHouseRequest);
+        const createdHouses = await service.createBulk(createHouseRequest);
 
         expect(houseRepositoryMock.create).toHaveBeenCalledWith(
-          createHouseRequest,
+          createHouseRequest.houses[0],
         );
-        expect(houseRepositoryMock.save).toHaveBeenCalledWith(mockHouse);
-        expect(createdMouse).toEqual(mockHouse);
+        expect(houseRepositoryMock.save).toHaveBeenCalledWith([mockHouse]);
+        expect(createdHouses).toEqual([mockHouse]);
       });
     });
   });

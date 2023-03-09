@@ -28,3 +28,13 @@
 
 - For pruning houses we set up a cron job for the task
 - This task doesn't require frequent execution, so we can schedule it to run once a day at 3AM (low traffic)
+
+### Testing
+
+- Implement unit test using Jest for: HouseService and AuthGuard
+
+### Bulk insert
+
+- Change endpoint from `/api/house` to plural form `/api/houses`
+- Update create logic to create bulk
+- Update unit test for HouseService.createBulk
