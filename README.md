@@ -44,3 +44,8 @@
 ### E2E Testing
 
 - Using npm package `testcontainers` to start a test database with Docker
+- Add a .env.test to use for running E2E Test
+
+### Docker
+
+- Set up Dockerfile and docker-compose to run the project
