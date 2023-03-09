@@ -63,8 +63,9 @@ export class HouseService {
       .transaction(async (transactionalEntityManager) => {
         await transactionalEntityManager.save(houseHistory);
         await transactionalEntityManager.save(house);
+        return house;
       })
-      .then(() => house)
+      .then((house) => house)
       .catch((err) => {
         this.logger.error(
           `updateOccupancy() for house ${JSON.stringify(
@@ -84,17 +85,15 @@ export class HouseService {
     });
   }
 
-  async pruneHouses() {
-    this.logger.debug('pruneHouses()');
+  async prune() {
+    this.logger.debug('prune()');
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
     const deleteResult = await this.houseRepository.delete({
       updatedAt: LessThan(oneYearAgo),
     });
-    this.logger.debug(
-      `pruneHouses() delete result: ${JSON.stringify(deleteResult)}`,
-    );
+    this.logger.debug(`prune() delete result: ${JSON.stringify(deleteResult)}`);
     return;
   }
 }

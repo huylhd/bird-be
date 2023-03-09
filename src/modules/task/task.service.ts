@@ -11,6 +11,6 @@ export class TaskService {
   @Cron(CronExpression.EVERY_DAY_AT_3AM)
   pruneHouses() {
     this.logger.debug('pruneHouses()');
-    return this.houseService.pruneHouses();
+    return this.houseService.prune();
   }
 }
