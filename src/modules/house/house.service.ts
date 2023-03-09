@@ -23,11 +23,15 @@ export class HouseService {
   ) {}
 
   create(dto: CreateHouseRequest): Promise<House> {
+    this.logger.log(`create() with params ${JSON.stringify(dto)}`);
     const house = this.houseRepository.create(dto);
     return this.houseRepository.save(house);
   }
 
   async update({ ubid, dto, house }: UpdateHouseParams): Promise<House> {
+    this.logger.log(
+      `update() with params ${JSON.stringify({ ubid, dto, house })}`,
+    );
     // We can pass the house object here to prevent making multiple queries,
     // only when no object is passed, we query the database
     if (!house) {
@@ -45,6 +49,9 @@ export class HouseService {
     dto,
     house,
   }: UpdateOccupancyParams): Promise<House> {
+    this.logger.log(
+      `updateOccupancy() with params ${JSON.stringify({ ubid, dto, house })}`,
+    );
     if (!house) {
       house = await this.getByUbid(ubid);
     }
@@ -71,6 +78,7 @@ export class HouseService {
   }
 
   getByUbid(ubid: string): Promise<House> {
+    this.logger.log(`getByUbid() with params ${JSON.stringify({ ubid })}`);
     return this.houseRepository.findOne({
       where: { ubid },
     });

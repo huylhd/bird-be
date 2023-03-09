@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Body,
   Controller,
@@ -10,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { formatHouse } from 'src/helpers';
 import { CreateHouseRequest } from './dto/create-house.dto';
 import { UpdateHouseRequest } from './dto/update-house.dto';
 import { UpdateOccupancyRequest } from './dto/update-occupancy.dto';
@@ -31,12 +31,12 @@ export class HouseController {
     @Request() req,
     @Body() dto: UpdateHouseRequest,
   ): Promise<Partial<House>> {
-    const { id, ubid, ...house } = await this.houseService.update({
+    const house = await this.houseService.update({
       ubid: req.house.ubid,
       dto,
       house: req.house,
     });
-    return house;
+    return formatHouse(house);
   }
 
   @Post(':ubid/occupancy')
@@ -46,18 +46,17 @@ export class HouseController {
     @Request() req,
     @Body() dto: UpdateOccupancyRequest,
   ): Promise<Partial<House>> {
-    const { id, ubid, ...house } = await this.houseService.updateOccupancy({
+    const house = await this.houseService.updateOccupancy({
       ubid: req.house.ubid,
       dto,
       house: req.house,
     });
-    return house;
+    return formatHouse(house);
   }
 
   @Get(':ubid')
   @UseGuards(AuthGuard)
-  getByUbid(@Request() req): Promise<Partial<House>> {
-    const { id, ubid, ...house } = req.house;
-    return house;
+  getByUbid(@Request() req): Partial<House> {
+    return formatHouse(req.house);
   }
 }
